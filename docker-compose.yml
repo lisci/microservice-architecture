@@ -1,0 +1,114 @@
+version: "3"
+volumes:
+  prometheus_data: {}
+
+services:
+
+#  eureka-discovery-server-service:
+#    image: eureka-discovery-server-service
+#    ports:
+#      - "8761:8761"
+#    networks:
+#      - test-network
+
+
+  engine-service:
+    image: engine-service
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-discovery-server-service:8761/eureka
+        -DZIPKIN_SERVER=http://zipkin:9411/
+    ports:
+      - "8800:8800"
+    #    links:
+    #      - zipkin
+    depends_on:
+#      - eureka-discovery-server-service
+      - zipkin
+    #      - zipkin
+    networks:
+      - test-network
+
+
+  fraud-microservice:
+    image: fraud-service
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-discovery-server-service:8761/eureka
+        -DZIPKIN_SERVER=http://zipkin:9411/
+    ports:
+      - "8700:8700"
+    #   links:
+    #     - zipkin
+    depends_on:
+      - engine-service
+      - zipkin
+    #     - zipkin
+    networks:
+      - test-network
+
+
+  spring-cloud-api-gateway-service:
+    image: spring-cloud-api-gateway-service
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://eureka-discovery-server-service:8761/eureka
+        -DZIPKIN_SERVER=http://zipkin:9411/
+    ports:
+      - "8900:8900"
+    #   links:
+    #     - zipkin
+    depends_on:
+      - zipkin
+      - engine-service
+      - fraud-service
+    networks:
+      - test-network
+
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./config/:/etc/prometheus
+      - ./data/prometheus:/data
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention=31d'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - "9090:9090"
+    depends_on:
+      - fraud-service
+      - zipkin
+    networks:
+      - test-network
+
+
+#  grafana:
+#    image: grafana/grafana
+#    ports:
+#      - "3000:3000"
+#    depends_on:
+#      - prometheus
+#    networks:
+#      - test-network
+
+
+  zipkin:
+    image: openzipkin/zipkin
+    environment:
+      - STORAGE_TYPE=mem
+    ports:
+      - "9411:9411"
+#    depends_on:
+#      - eureka-discovery-server-service
+    networks:
+      - test-network
+
+
+
+networks:
+  test-network:
+
