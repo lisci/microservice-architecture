@@ -1,6 +1,6 @@
 spring:
   application:
-    name: property-access-service
+    name: spring-cloud-config-client
   profiles:
     active: dev
   config:
