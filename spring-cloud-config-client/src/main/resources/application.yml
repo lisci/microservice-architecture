@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: spring-cloud-config-client
+  profiles:
+    active: dev
+  config:
+    import: "configserver:http://localhost:8888"
+#  mvc:
+#    pathmatch:
+#      matching-strategy: ant_path_matcher
+
+server:
+  port: ${port:8100}
+
+
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, beans, env
