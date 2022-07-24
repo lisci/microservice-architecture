@@ -14,7 +14,7 @@
 	<name>spring-cloud-config-server</name>
 	<description>Spring Cloud Config server project for Spring Boot</description>
 	<properties>
-		<java.version>18</java.version>
+		<java.version>17</java.version>
 		<spring-cloud.version>2021.0.3</spring-cloud.version>
 	</properties>
 	<dependencies>
