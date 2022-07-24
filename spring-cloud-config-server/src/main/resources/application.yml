@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: spring-cloud-config-server
+  cloud:
+    config:
+      server:
+        git:
+          skip-ssl-validation: true
+          uri: https://github.com/lisci/spring-microservices.git
+          search-paths:
+            - spring-cloud-config-properties
+
+server:
+  port: ${port:8888}
+
