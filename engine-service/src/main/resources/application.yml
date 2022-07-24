@@ -1,0 +1,63 @@
+spring:
+  application:
+    name: engine-microservice
+  sleuth:
+    enabled: true
+  zipkin:
+    enabled: true
+    base-url: ${ZIPKIN_SERVER:http://localhost:9411/}
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: password
+    driver-class-name: org.h2.Driver
+    hikari:
+      idle-timeout: 10000
+    sql:
+      init:
+        data-locations*:
+          - data.sql
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: false
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
+
+server:
+  port: ${port:8800}
+
+feign:
+  compression:
+    request:
+      enabled: true
+      mime-types:
+        - text/xml,application/xml,application/json
+  autoconfiguration:
+    jackson:
+      enabled: true
+  hystrix:
+    enabled: false
+  okhttp:
+    enabled: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+
+clients:
+  fraud:
+    url: http://localhost:8700
+
