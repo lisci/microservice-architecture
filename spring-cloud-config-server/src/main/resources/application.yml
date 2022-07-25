@@ -6,9 +6,9 @@ spring:
       server:
         git:
           skip-ssl-validation: true
-          uri: https://github.com/lisci/spring-microservices.git
+          uri: https://github.com/lisci/microservice-architecture.git
           search-paths:
-            - spring-cloud-config-properties
+            - feature_spring_cloud_config_properties
 
 server:
   port: ${port:8888}
