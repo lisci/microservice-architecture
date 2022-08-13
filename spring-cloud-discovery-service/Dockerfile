@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk18:alpine-jre
+FROM openjdk:17-alpine
 COPY target/*.jar app.jar
 ENV JAVA_OPTS=""
 EXPOSE 8761
