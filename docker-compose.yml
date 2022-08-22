@@ -157,6 +157,13 @@ services:
       - '--config.file=/etc/alertmanager/alertmanager.conf'
     ports:
       - 9093:9093
+    restart: always
+    healthcheck:
+      test: curl --fail http://localhost || exit 1
+      interval: 10s
+      retries: 5
+      start_period: 5s
+      timeout: 10s
   
   prometheus:
     image: prom/prometheus
@@ -172,6 +179,13 @@ services:
       - '--web.console.templates=/usr/share/prometheus/consoles'
     ports:
       - 9090:9090
+    restart: always
+    healthcheck:
+      test: curl --fail http://localhost || exit 1
+      interval: 10s
+      retries: 5
+      start_period: 5s
+      timeout: 10s
     links:
       - alertmanager:alertmanager
     depends_on:
@@ -190,6 +204,13 @@ services:
       - grafana_data:/var/lib/grafana
     ports:
       - 3000:3000
+    restart: always
+    healthcheck:
+      test: curl --fail http://localhost || exit 1
+      interval: 10s
+      retries: 5
+      start_period: 5s
+      timeout: 10s
 
   # DISCOVERY SERVICE
   spring-cloud-discovery-service:
@@ -198,7 +219,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8761:8761
-    restart: on-failure
+    restart: always
     healthcheck:
       test: curl --fail http://localhost || exit 1
       interval: 10s
@@ -217,7 +238,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8888:8888
-    restart: on-failure
+    restart: always
     healthcheck:
       test: curl --fail http://localhost || exit 1
       interval: 10s
@@ -237,8 +258,8 @@ services:
       context: ./fraud-service
       dockerfile: Dockerfile
     ports:
-      - 8700:8700
-    restart: on-failure
+      - 8700
+    restart: always
     healthcheck:
       test: curl --fail http://localhost || exit 1
       interval: 10s
@@ -262,7 +283,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8600:8600
-    restart: on-failure
+    restart: always
     healthcheck:
       test: curl --fail http://localhost || exit 1
       interval: 10s
@@ -290,7 +311,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8900:8900
-    restart: on-failure
+    restart: always
     healthcheck:
       test: curl --fail http://localhost || exit 1
       interval: 10s
