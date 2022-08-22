@@ -1,26 +1,65 @@
+# Server config
+server:
+  port: ${PORT:8900}
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework.web: DEBUG
+
+info:
+  component: API Gateway
+
+# Spring config
 spring:
   application:
     name: spring-cloud-api-gateway-service
   zipkin:
     enabled: true
-    base-url: ${ZIPKIN_SERVER:http://localhost:9411/}
-
+    base-url: http://localhost:9411/
   cloud:
     gateway:
       routes:
-        - id: stock-enquiry
-          uri: http://product-enquiry-service:8700/
+        - id: engine-service
+          uri: http://localhost:8800/
           predicates:
-            - Path=/product-enquiry/**
+            - Path=/engine/**
+        - id: fraud-service
+          uri: http://localhost:8700/
+          predicates:
+            - Path=/fraud/**
 
-server:
-  port: ${port:8900}
-
+# Eureka config
 eureka:
   client:
     serviceUrl:
-      defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}
+      defaultZone: ${DISCOVERY_URL:http://localhost:8761}/eureka
+    registerWithEureka: false
+    fetchRegistry: false
 
+# Ribbon config
+ribbon:
+  eureka:
+    enabled: true
+
+# Zuul config
+# zuul:
+#   prefix: /api
+#   routes:
+#     engine:
+#       path: /engine/**
+#       serviceId: engine-service
+#     fraud:
+#       path: /fraud/**
+#       serviceId: fraud-service
+
+endpoints:
+  routes:
+    sensitive: false
+  trace:
+    sensitive: false
+
+# Health management
 management:
   endpoints:
     web:
