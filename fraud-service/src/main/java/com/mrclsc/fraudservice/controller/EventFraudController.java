@@ -20,22 +20,20 @@ public class EventFraudController {
     private final EventFraudService eventFraudService;
 
     @GetMapping("/fraud/{typeEvent}/{nameEvent}")
-    public ResponseEntity getFraud(@PathVariable String typeEvent,
+    public ResponseEntity<?> getFraud(@PathVariable String typeEvent,
                                    @PathVariable String nameEvent) {
-
-        Optional<EventFraud> eventFraud = eventFraudService.checkFraud(nameEvent, typeEvent);
-
+        Optional<EventFraud> eventFraud = eventFraudService.checkFraud(nameEvent, typeEvent);   
+             
         if(eventFraud.isPresent())
             return new ResponseEntity(eventFraud, HttpStatus.OK);
         else
             return new ResponseEntity(HttpStatus.NOT_FOUND);
-
     }
 
 
     @GetMapping("/fraud")
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity getAllFraud() {
+    public ResponseEntity<?> getAllFraud() {
         List<EventFraud> eventFraudList = eventFraudService.getAllFraud();
 
         if(eventFraudList.isEmpty())

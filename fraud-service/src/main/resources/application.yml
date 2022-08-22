@@ -1,11 +1,25 @@
+# Server config
+server:
+  port: ${PORT:8700}
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework.web: DEBUG
+
+info:
+  component: Fraud service
+
+# Spring config
 spring:
   application:
-    name: fraud-microservice
+    name: fraud-service
   sleuth:
     enabled: true
   zipkin:
     enabled: true
     base-url: ${ZIPKIN_SERVER:http://localhost:9411/}
+
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:h2:mem:testdb
@@ -14,10 +28,10 @@ spring:
     driver-class-name: org.h2.Driver
     hikari:
       idle-timeout: 10000
-  #  sql:
-  #    init:
-  #      data-locations*:
-  #        - data.sql
+    sql:
+     init:
+       data-locations*:
+         - data.sql
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     show-sql: false
@@ -27,15 +41,26 @@ spring:
 
 
 
-
-server:
-  port: ${port:8700}
-
+# Eureka config
 eureka:
   client:
     serviceUrl:
-      defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}
+      defaultZone: ${DISCOVERY_URL:http://localhost:8761}/eureka
+    registerWithEureka: false
+    fetchRegistry: false
 
+# Ribbon config
+ribbon:
+  eureka:
+    enabled: true
+
+# endpoints:
+#   routes:
+#     sensitive: false
+#   trace:
+#     sensitive: false
+
+# Health management
 management:
   endpoints:
     web:
@@ -44,15 +69,3 @@ management:
   endpoint:
     health:
       show-details: always
-
-
-#  spring.datasource.username=sa
-#  spring.datasource.password=password
-#  spring.datasource.driverClassName=org.h2.Driver
-#  spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
-
-
-
-#techefx-product-stock-service:
-#  ribbon:
-#    listOfServers: http://localhost:8800, http://localhost:8801
