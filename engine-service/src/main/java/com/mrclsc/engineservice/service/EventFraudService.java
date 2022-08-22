@@ -1,15 +1,14 @@
 package com.mrclsc.engineservice.service;
 
 import com.mrclsc.engineservice.client.FraudClient;
-import com.mrclsc.engineservice.model.EventFraud;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +16,7 @@ public class EventFraudService {
 
     private final FraudClient fraudClient;
 
+    @Cacheable
     public ResponseEntity<?> checkEventFraud(String nameEvent, String typeEvent) {
         
         try {
@@ -27,6 +27,7 @@ public class EventFraudService {
         }
     }
 
+    @Cacheable
     public ResponseEntity<?> getAllFraud() {
         
         try {
