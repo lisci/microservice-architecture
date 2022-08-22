@@ -17,9 +17,20 @@ public class EventFraudService {
 
     private final FraudClient fraudClient;
 
-    public ResponseEntity<List<EventFraud>> checkEventFraud(String nameEvent, String typeEvent) {
+    public ResponseEntity<?> checkEventFraud(String nameEvent, String typeEvent) {
+        
         try {
-            ResponseEntity<List<EventFraud>> responseEntity = fraudClient.checkEventFraud(typeEvent, nameEvent);
+            ResponseEntity<?> responseEntity = fraudClient.checkEventFraud(typeEvent, nameEvent);
+            return new ResponseEntity(responseEntity.getBody(), responseEntity.getStatusCode());
+        }catch (FeignException feignException) {
+            return new ResponseEntity(feignException.responseBody(), HttpStatus.valueOf(feignException.status()));
+        }
+    }
+
+    public ResponseEntity<?> getAllFraud() {
+        
+        try {
+            ResponseEntity<?> responseEntity = fraudClient.getAllFraud();
             return new ResponseEntity(responseEntity.getBody(), responseEntity.getStatusCode());
         }catch (FeignException feignException) {
             return new ResponseEntity(feignException.responseBody(), HttpStatus.valueOf(feignException.status()));

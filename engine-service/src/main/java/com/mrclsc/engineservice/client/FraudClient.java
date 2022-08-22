@@ -7,23 +7,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
 
-@FeignClient(
-        name = "fraud-microservice",
-        url = "${clients.fraud.url}"
-)
+@FeignClient(name = "fraud-microservice", url = "${clients.fraud.url}")
 @Service
 public interface FraudClient {
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/fraud/{typeEvent}/{nameEvent}",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<List<EventFraud>> checkEventFraud(@RequestParam String typeEvent,
-                                                            @RequestParam String nameEvent);
+        @RequestMapping(method = RequestMethod.GET, value = "/fraud/{typeEvent}/{nameEvent}", produces = MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity<?> checkEventFraud(@PathVariable String typeEvent,
+                        @PathVariable String nameEvent);
 
-
+        @RequestMapping(method = RequestMethod.GET, value = "/fraud", produces = MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity<?> getAllFraud();
 }

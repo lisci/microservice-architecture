@@ -1,11 +1,30 @@
+# Server config
+server:
+  port: ${PORT:8600}
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework.web: DEBUG
+
+
+
+info:
+  component: Engine service
+
+# Spring config
 spring:
+  mvc:
+    log-request-details: true
+
   application:
-    name: engine-microservice
+    name: engine-service
   sleuth:
     enabled: true
   zipkin:
     enabled: true
     base-url: ${ZIPKIN_SERVER:http://localhost:9411/}
+
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:h2:mem:testdb
@@ -14,10 +33,10 @@ spring:
     driver-class-name: org.h2.Driver
     hikari:
       idle-timeout: 10000
-    sql:
-      init:
-        data-locations*:
-          - data.sql
+  #  sql:
+  #    init:
+  #      data-locations*:
+  #        - data.sql
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     show-sql: false
@@ -25,8 +44,13 @@ spring:
     hibernate:
       ddl-auto: update
 
-server:
-  port: ${port:8800}
+# Eureka config
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${DISCOVERY_URL:http://localhost:8761}/eureka
+    registerWithEureka: false
+    fetchRegistry: false
 
 feign:
   compression:
@@ -41,12 +65,30 @@ feign:
     enabled: false
   okhttp:
     enabled: true
-
-eureka:
   client:
-    serviceUrl:
-      defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: FULL
 
+clients:
+  fraud:
+    url: ${FRAUD_URL:http://http://localhost:8700/}
+
+
+# Ribbon config
+ribbon:
+  eureka:
+    enabled: true
+
+# endpoints:
+#   routes:
+#     sensitive: false
+#   trace:
+#     sensitive: false
+
+# Health management
 management:
   endpoints:
     web:
@@ -55,9 +97,3 @@ management:
   endpoint:
     health:
       show-details: always
-
-
-clients:
-  fraud:
-    url: http://localhost:8700
-
