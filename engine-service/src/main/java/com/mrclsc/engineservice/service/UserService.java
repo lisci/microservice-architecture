@@ -1,24 +1,31 @@
 package com.mrclsc.engineservice.service;
 
-import com.mrclsc.engineservice.model.UserEntity;
-import com.mrclsc.engineservice.model.UserRequest;
+import com.mrclsc.engineservice.entity.User;
 import com.mrclsc.engineservice.repository.UserRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@AllArgsConstructor
-public class UserService {
+@RequiredArgsConstructor
+public class UserService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    @Autowired
+    UserRepository userRepository;
 
-    public UserEntity getUser(long userId) {
-        return UserEntity.builder()
-                .firstName("Antonio")
-                .lastName("Rossi")
-                .email("antonio.rossi@email.com")
-                .build();
+    @Override
+    @Transactional
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+
+        return User.builder().id(user.getId()).email(user.getEmail()).authorities(user.getAuthorities()).password(user.getPassword()).firstName(user.getFirstName()).lastName(user.getLastName()).username(user.getUsername()).build();
     }
 
+    public User getUserById(long userId) {
+        return userRepository.getReferenceById(userId);
+    }
 
 }

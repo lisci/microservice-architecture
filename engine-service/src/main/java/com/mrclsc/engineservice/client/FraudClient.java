@@ -1,13 +1,12 @@
 package com.mrclsc.engineservice.client;
 
-import com.mrclsc.engineservice.model.EventFraud;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(name = "fraud-microservice", url = "${clients.fraud.url}")
 @Service
