@@ -5,7 +5,7 @@ server:
 logging:
   level:
     ROOT: INFO
-    org.springframework.web: DEBUG
+
 
 
 
@@ -61,8 +61,8 @@ feign:
   autoconfiguration:
     jackson:
       enabled: true
-  hystrix:
-    enabled: false
+#  hystrix:
+#    enabled: false
   okhttp:
     enabled: true
   client:
@@ -72,9 +72,9 @@ feign:
         readTimeout: 5000
         loggerLevel: FULL
 
-clients:
-  fraud:
-    url: ${FRAUD_URL:http://http://localhost:8700/}
+#clients:
+#  fraud:
+#    url: ${FRAUD_URL:http://http://localhost:8700/}
 
 
 # Ribbon config
@@ -97,3 +97,8 @@ management:
   endpoint:
     health:
       show-details: always
+
+# App Properties
+jwt:
+  secret: secretKey
+  expiration: 86400000

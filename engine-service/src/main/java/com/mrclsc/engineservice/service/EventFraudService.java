@@ -3,11 +3,12 @@ package com.mrclsc.engineservice.service;
 import com.mrclsc.engineservice.client.FraudClient;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.CompletableFuture;
 
 
 @Service
@@ -17,25 +18,23 @@ public class EventFraudService {
     private final FraudClient fraudClient;
 
     @Cacheable
-    public ResponseEntity<?> checkEventFraud(String nameEvent, String typeEvent) {
-        
+    public CompletableFuture<ResponseEntity<?>> checkEventFraud(String nameEvent, String typeEvent) {
         try {
-            ResponseEntity<?> responseEntity = fraudClient.checkEventFraud(typeEvent, nameEvent);
-            return new ResponseEntity(responseEntity.getBody(), responseEntity.getStatusCode());
+            return CompletableFuture.supplyAsync(() -> fraudClient.checkEventFraud(typeEvent, nameEvent));
         }catch (FeignException feignException) {
-            return new ResponseEntity(feignException.responseBody(), HttpStatus.valueOf(feignException.status()));
+            return CompletableFuture.supplyAsync(() -> new ResponseEntity(feignException.responseBody(), HttpStatus.valueOf(feignException.status())));
         }
     }
 
     @Cacheable
-    public ResponseEntity<?> getAllFraud() {
-        
+    public CompletableFuture<ResponseEntity<?>> getAllFraud() {
+
         try {
-            ResponseEntity<?> responseEntity = fraudClient.getAllFraud();
-            return new ResponseEntity(responseEntity.getBody(), responseEntity.getStatusCode());
+            return CompletableFuture.supplyAsync(() -> fraudClient.getAllFraud());
         }catch (FeignException feignException) {
-            return new ResponseEntity(feignException.responseBody(), HttpStatus.valueOf(feignException.status()));
+            return CompletableFuture.supplyAsync(() -> new ResponseEntity(feignException.responseBody(), HttpStatus.valueOf(feignException.status())));
         }
+
     }
 
 }
