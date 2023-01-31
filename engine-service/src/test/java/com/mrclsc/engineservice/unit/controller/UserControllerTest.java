@@ -2,7 +2,6 @@ package com.mrclsc.engineservice.unit.controller;
 
 
 import com.mrclsc.engineservice.controller.UserController;
-import com.mrclsc.engineservice.entity.User;
 import com.mrclsc.engineservice.mocks.MockBuilder;
 import com.mrclsc.engineservice.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -10,12 +9,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -34,11 +34,19 @@ class UserControllerTest {
         when(userService.getUserById(any(Long.class))).thenReturn(MockBuilder.userEntityBuilder()); // Mocking service
 
         ResponseEntity<?> response = userController.getUserById(any(Long.class));
-        User userEntity = (User) response.getBody();
 
         assertNotNull(response);
-        assertEquals("Antonio", userEntity.getFirstName());
-        assertEquals("Rossi", userEntity.getLastName());
-        assertEquals("antonio.rossi@email.com", userEntity.getEmail());
+        assertEquals(MockBuilder.userEntityBuilder(), response.getBody());
+        verify(userService, times(1)).getUserById(0L);
+    }
+
+    @Test
+    void shouldNotGetUserByIdTest() {
+        when(userService.getUserById(any(Long.class))).thenReturn(null); // Mocking service
+
+        ResponseEntity<?> response = userController.getUserById(any(Long.class));
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        verify(userService, times(1)).getUserById(0L);
     }
 }
