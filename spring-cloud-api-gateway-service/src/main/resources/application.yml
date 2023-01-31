@@ -18,40 +18,34 @@ spring:
     enabled: true
     base-url: http://localhost:9411/
   cloud:
+    discovery:
+      enabled: true
     gateway:
       routes:
-        - id: engine-service
-          uri: http://localhost:8800/
+        - id: engine-engine
+          uri: lb://engine-service:8701/
           predicates:
-            - Path=/engine/**
+            - Path=/**
         - id: fraud-service
-          uri: http://localhost:8700/
+          uri: lb://fraud-service:8702/
           predicates:
-            - Path=/fraud/**
+            - Path=/**
+
 
 # Eureka config
 eureka:
   client:
+    registerWithEureka: true
+    fetchRegistry: true
     serviceUrl:
       defaultZone: ${DISCOVERY_URL:http://localhost:8761}/eureka
-    registerWithEureka: false
-    fetchRegistry: false
+  instance:
+    preferIpAddress: true
 
 # Ribbon config
 ribbon:
   eureka:
     enabled: true
-
-# Zuul config
-# zuul:
-#   prefix: /api
-#   routes:
-#     engine:
-#       path: /engine/**
-#       serviceId: engine-service
-#     fraud:
-#       path: /fraud/**
-#       serviceId: fraud-service
 
 endpoints:
   routes:
