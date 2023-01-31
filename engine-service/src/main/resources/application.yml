@@ -1,13 +1,11 @@
 # Server config
 server:
-  port: ${PORT:8600}
+  port: ${PORT:8701}
 
 logging:
   level:
     ROOT: INFO
-
-
-
+    org.springframework.security: TRACE
 
 info:
   component: Engine service
@@ -33,10 +31,10 @@ spring:
     driver-class-name: org.h2.Driver
     hikari:
       idle-timeout: 10000
-  #  sql:
-  #    init:
-  #      data-locations*:
-  #        - data.sql
+    sql:
+      init:
+        data-locations*:
+          - data.sql
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     show-sql: false
@@ -47,10 +45,13 @@ spring:
 # Eureka config
 eureka:
   client:
+    registerWithEureka: true
+    fetchRegistry: true
     serviceUrl:
       defaultZone: ${DISCOVERY_URL:http://localhost:8761}/eureka
-    registerWithEureka: false
-    fetchRegistry: false
+  instance:
+    hostname: localhost
+
 
 feign:
   compression:
@@ -61,20 +62,11 @@ feign:
   autoconfiguration:
     jackson:
       enabled: true
-#  hystrix:
-#    enabled: false
-  okhttp:
-    enabled: true
-  client:
-    config:
-      default:
-        connectTimeout: 5000
-        readTimeout: 5000
-        loggerLevel: FULL
 
-#clients:
-#  fraud:
-#    url: ${FRAUD_URL:http://http://localhost:8700/}
+
+clients:
+  fraud:
+    url: ${FRAUD_URL:http://localhost:8700/}
 
 
 # Ribbon config
@@ -97,8 +89,3 @@ management:
   endpoint:
     health:
       show-details: always
-
-# App Properties
-jwt:
-  secret: secretKey
-  expiration: 86400000
