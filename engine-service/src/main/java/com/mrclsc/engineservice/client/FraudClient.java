@@ -16,6 +16,6 @@ public interface FraudClient {
         public ResponseEntity<?> checkEventFraud(@PathVariable String typeEvent,
                         @PathVariable String nameEvent);
 
-        @RequestMapping(method = RequestMethod.GET, value = "/fraud", produces = MediaType.APPLICATION_JSON_VALUE)
+        @RequestMapping(method = RequestMethod.GET, value = "/frauds", produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<?> getAllFraud();
 }
