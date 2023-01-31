@@ -5,21 +5,19 @@ import com.mrclsc.fraudservice.service.EventFraudService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/fraud-service")
 public class EventFraudController {
 
     private final EventFraudService eventFraudService;
 
-    @GetMapping("/fraud/{typeEvent}/{nameEvent}")
+    @GetMapping("/{typeEvent}/{nameEvent}")
     public ResponseEntity<?> getFraud(@PathVariable String typeEvent,
                                    @PathVariable String nameEvent) {
         Optional<EventFraud> eventFraud = eventFraudService.checkFraud(nameEvent, typeEvent);   
@@ -31,7 +29,7 @@ public class EventFraudController {
     }
 
 
-    @GetMapping("/fraud")
+    @GetMapping("/frauds")
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> getAllFraud() {
         List<EventFraud> eventFraudList = eventFraudService.getAllFraud();
