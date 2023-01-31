@@ -1,19 +1,22 @@
 # Server config
 server:
-  port: ${PORT:8700}
+  port: ${PORT:8701}
 
 logging:
   level:
     ROOT: INFO
-    org.springframework.web: DEBUG
+    org.springframework.security: TRACE
 
 info:
-  component: Fraud service
+  component: Engine service
 
 # Spring config
 spring:
+  mvc:
+    log-request-details: true
+
   application:
-    name: fraud-service
+    name: engine-service
   sleuth:
     enabled: true
   zipkin:
@@ -29,9 +32,9 @@ spring:
     hikari:
       idle-timeout: 10000
     sql:
-     init:
-       data-locations*:
-         - data.sql
+      init:
+        data-locations*:
+          - data.sql
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     show-sql: false
@@ -39,15 +42,32 @@ spring:
     hibernate:
       ddl-auto: update
 
-
-
 # Eureka config
 eureka:
   client:
+    registerWithEureka: true
+    fetchRegistry: true
     serviceUrl:
       defaultZone: ${DISCOVERY_URL:http://localhost:8761}/eureka
-    registerWithEureka: false
-    fetchRegistry: false
+  instance:
+    hostname: localhost
+
+
+feign:
+  compression:
+    request:
+      enabled: true
+      mime-types:
+        - text/xml,application/xml,application/json
+  autoconfiguration:
+    jackson:
+      enabled: true
+
+
+clients:
+  fraud:
+    url: ${FRAUD_URL:http://localhost:8700/}
+
 
 # Ribbon config
 ribbon:
