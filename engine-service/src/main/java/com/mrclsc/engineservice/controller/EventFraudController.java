@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.concurrent.Future;
-
 
 @RestController
 @RequestMapping("/engine")
@@ -38,7 +36,7 @@ public class EventFraudController {
             @Parameter(name = "typeEvent", description = "Event type can be for instance 'IP'"),
             @Parameter(name = "nameEvent", description = "Event name can be for instance an ip")
     })
-    public Future<ResponseEntity<?>> getFraud(@PathVariable String typeEvent,
+    public ResponseEntity<?> getFraud(@PathVariable String typeEvent,
                                               @PathVariable String nameEvent) throws JsonProcessingException {
         return eventFraudService.checkEventFraud(nameEvent, typeEvent);
     }
@@ -50,7 +48,7 @@ public class EventFraudController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved"),
             @ApiResponse(responseCode = "404", description = "Not found - The fraud list was not found")
     })
-    public Future<ResponseEntity<?>> getAllFraud() throws JsonProcessingException {
+    public ResponseEntity<?> getAllFraud() throws JsonProcessingException {
         return eventFraudService.getAllFraud();
     }
 
