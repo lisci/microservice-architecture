@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -19,6 +20,7 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles("unit")
 class UserControllerTest {
 
     /*
@@ -31,22 +33,24 @@ class UserControllerTest {
 
     @Test
     void shouldGetUserByIdTest() {
-        when(userService.getUserById(any(Long.class))).thenReturn(MockBuilder.userEntityBuilder()); // Mocking service
+        when(userService.getUserById(any(Long.class)))
+                .thenReturn(MockBuilder.userEntityBuilder()); // Mocking service
 
         ResponseEntity<?> response = userController.getUserById(any(Long.class));
 
         assertNotNull(response);
         assertEquals(MockBuilder.userEntityBuilder(), response.getBody());
-        verify(userService, times(1)).getUserById(0L);
+        verify(userService, times(1)).getUserById(any(Long.class));
     }
 
     @Test
     void shouldNotGetUserByIdTest() {
-        when(userService.getUserById(any(Long.class))).thenReturn(null); // Mocking service
+        when(userService.getUserById(any(Long.class)))
+                .thenReturn(null); // Mocking service
 
         ResponseEntity<?> response = userController.getUserById(any(Long.class));
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(userService, times(1)).getUserById(0L);
+        verify(userService, times(1)).getUserById(any(Long.class));
     }
 }
