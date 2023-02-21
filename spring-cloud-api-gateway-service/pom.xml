@@ -72,12 +72,6 @@
 			<artifactId>micrometer-registry-prometheus</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.mrclsc.engine-service</groupId>
-			<artifactId>engine-service</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>

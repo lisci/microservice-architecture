@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface FraudClient {
 
         @RequestMapping(method = RequestMethod.GET, value = "/fraud/{typeEvent}/{nameEvent}", produces = MediaType.APPLICATION_JSON_VALUE)
-        public ResponseEntity<?> checkEventFraud(@PathVariable String typeEvent,
-                        @PathVariable String nameEvent);
+        public ResponseEntity<?> checkEventFraud(@PathVariable(value = "typeEvent") String typeEvent, @PathVariable(value = "nameEvent") String nameEvent);
 
         @RequestMapping(method = RequestMethod.GET, value = "/frauds", produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<?> getAllFraud();
